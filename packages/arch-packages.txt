@@ -1,0 +1,45 @@
+# Core System Utilities
+
+base-devel
+git
+curl
+wget
+vim
+nano
+tree
+htop
+btop
+bash-completion
+man-db
+man-pages
+
+# Networking
+
+networkmanager
+openssh
+
+# Development
+
+gcc
+make
+cmake
+python
+python-pip
+
+# Archive / Compression
+
+zip
+unzip
+p7zip
+
+# File Management
+
+rsync
+ncdu
+
+# Future Desktop Environment
+
+hyprland
+waybar
+kitty
+neovim
