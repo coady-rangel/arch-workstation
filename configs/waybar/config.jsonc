@@ -57,12 +57,16 @@
                 ""
             ]
         },
-        "tooltip-format": "Volume: {volume}%"
+        "tooltip-format": "Volume: {volume}%",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%"
     },
 
     "custom/power": {
         "format": "",
         "tooltip": false,
-        "on-click": "power-menu"
+        "on-click": "sh -c '$HOME/.local/bin/power-menu'"
     }
 }

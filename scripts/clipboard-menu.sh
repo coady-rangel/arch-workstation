@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
-selection="$(cliphist list | rofi -dmenu -i -p 'Clipboard')"
+set -euo pipefail
+
+selection=$(
+    cliphist list |
+    rofi -dmenu \
+        -i \
+        -p "Clipboard"
+)
 
 [ -z "$selection" ] && exit 0
 
-printf '%s' "$selection" | cliphist decode | wl-copy
+cliphist decode <<< "$selection" | wl-copy
