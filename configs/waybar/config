@@ -3,6 +3,7 @@
     "position": "top",
 
     "modules-left": [
+        "custom/launcher",
         "hyprland/workspaces"
     ],
 
@@ -18,6 +19,14 @@
         "tray",
         "custom/power"
     ],
+
+    "custom/launcher": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "rofi -show drun",
+        "on-click-right": "sh -c '$HOME/.local/bin/power-menu'",
+        "on-click-middle": "cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+    },
 
     "hyprland/workspaces": {
         "disable-scroll": true,
