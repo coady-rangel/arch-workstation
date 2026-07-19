@@ -1,0 +1,27 @@
+# Editor files
+*.swp
+*.swo
+*~
+*.bak
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Vim
+.vim/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
