@@ -11,4 +11,3 @@ alias lt='eza --tree --level=2 --icons=auto'
 # grep
 alias grep='grep --color=auto'
 
-alias c='clear'
