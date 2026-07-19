@@ -5,6 +5,7 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_SCRIPT="$SCRIPT_DIR/install.sh"
 DEPLOY_SCRIPT="$SCRIPT_DIR/deploy-configs.sh"
+VALIDATE_SCRIPT="$SCRIPT_DIR/validate.sh"
 
 error() {
     echo "Error: $*" >&2
@@ -13,6 +14,7 @@ error() {
 
 [[ -x "$INSTALL_SCRIPT" ]] || error "install.sh not found or not executable."
 [[ -x "$DEPLOY_SCRIPT" ]] || error "deploy-configs.sh not found or not executable."
+[[ -x "$VALIDATE_SCRIPT" ]] || error "validate.sh not found or not executable."
 
 echo "================================="
 echo " Arch Workstation Bootstrap"
@@ -34,7 +36,7 @@ echo
 echo "[3/3] System validation"
 echo
 
-echo "System validation has not been implemented yet."
+"$VALIDATE_SCRIPT"
 
 echo
 echo "Bootstrap completed successfully."
