@@ -1,0 +1,68 @@
+* {
+    bg: #1a1b26ee;
+    bg-alt: #24283bee;
+    fg: #c0caf5;
+    muted: #565f89;
+    accent: #7aa2f7;
+    urgent: #f7768e;
+
+    background-color: transparent;
+    text-color: @fg;
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+window {
+    width: 620px;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 18px;
+    background-color: @bg;
+    padding: 18px;
+}
+
+mainbox {
+    spacing: 14px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 12px;
+    padding: 12px;
+    spacing: 10px;
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    placeholder: "Search applications";
+    placeholder-color: @muted;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+    spacing: 8px;
+    scrollbar: false;
+    fixed-height: false;
+}
+
+element {
+    padding: 10px;
+    spacing: 12px;
+    border-radius: 10px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #1a1b26;
+}
+
+element-icon {
+    size: 32px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}

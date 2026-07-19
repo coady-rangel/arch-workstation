@@ -1,0 +1,10 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    icon-theme: "Papirus";
+    terminal: "foot";
+    font: "JetBrainsMono Nerd Font 12";
+    drun-reload-desktop-cache: true;
+}
+
+@theme "tokyo-night"
