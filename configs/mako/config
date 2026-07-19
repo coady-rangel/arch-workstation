@@ -1,0 +1,28 @@
+# =====================================
+# Mako Notification Configuration
+# =====================================
+
+# Position
+anchor=top-right
+
+# Layout
+width=350
+height=120
+margin=15
+padding=12
+border-size=2
+border-radius=8
+
+# Timing
+default-timeout=5000
+ignore-timeout=0
+
+# Appearance
+font=monospace 10
+background-color=#1e1e2eee
+text-color=#ffffffff
+border-color=#89b4faff
+
+# Behavior
+sort=-time
+layer=overlay
