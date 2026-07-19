@@ -1,121 +1,195 @@
 # Arch Linux Workstation Infrastructure
 
-## Overview
+A reproducible, Infrastructure-as-Code (IaC) approach to building and maintaining my personal Arch Linux workstation.
 
-This repository contains the configuration, automation, and documentation required to reproduce my Arch Linux workstation environment.
-
-The goal is to transform a manual Linux installation into a documented, version-controlled, and repeatable workstation deployment process.
+This repository contains the configuration files, package manifests, and automation scripts required to deploy and maintain a consistent Hyprland-based desktop environment.
 
 ---
 
-## Architecture
+# Overview
+
+The goal of this project is to eliminate manual workstation configuration by treating a Linux desktop like production infrastructure:
+
+- Version controlled
+- Documented
+- Automated
+- Reproducible
+- Easy to rebuild
+
+Instead of configuring a workstation by hand, the entire environment can be recreated from source control.
+
+---
+
+# Architecture
 
 ```text
-Hardware
-    |
-    v
-Arch Linux
-    |
-    v
-System Configuration
-    |
-    v
-Dotfiles
-    |
-    v
-Automation Scripts
-    |
-    v
-Reproducible Workstation
+                GitHub
+                   │
+                   ▼
+        Arch Linux Base Install
+                   │
+                   ▼
+         Package Installation
+                   │
+                   ▼
+        Configuration Deployment
+                   │
+                   ▼
+        Hyprland Desktop Environment
+                   │
+                   ▼
+        Reproducible Workstation
 ```
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```text
 dotfiles/
 
 ├── configs/
+│   ├── foot/
 │   ├── hypr/
-│   ├── waybar/
-│   ├── kitty/
-│   └── nvim/
+│   ├── hypridle/
+│   ├── hyprlock/
+│   ├── hyprpaper/
+│   ├── mako/
+│   ├── rofi/
+│   └── waybar/
 │
 ├── packages/
 │   └── arch-packages.txt
 │
 ├── scripts/
-│   ├── install.sh
-│   └── bootstrap.sh
+│   ├── bootstrap.sh
+│   ├── clipboard-menu.sh
+│   └── install.sh
 │
-└── docs/
+└── README.md
 ```
 
 ---
 
-## Goals
+# Current Features
 
-* Create a reproducible Arch Linux environment
-* Manage workstation configuration through Git
-* Automate package installation
-* Version control desktop environment configuration
-* Document system architecture and deployment decisions
-* Enable future migration from VM to bare-metal hardware
+## Desktop
+
+- Hyprland Wayland compositor
+- Waybar status bar
+- Foot terminal
+- Rofi application launcher
+- Mako notifications
+
+## System
+
+- PipeWire audio
+- WirePlumber session management
+- Polkit integration
+- Thunar file manager
+- GVFS support
+
+## Utilities
+
+- Screenshot tools (Grim + Slurp)
+- Clipboard history (Cliphist)
+- Package manifest
+- Modular Hyprland configuration
+- Deployment scripts
 
 ---
 
-## Current Platform
+# Quick Start
 
-Operating System:
-Arch Linux
+Clone the repository:
 
-Environment:
-VMware Virtual Machine
-
-Architecture:
-x86_64
-
-Purpose:
-Development workstation and future Linux desktop environment
-
----
-
-## Future Target
-
-The long-term goal is to deploy this configuration onto bare-metal hardware using the same principles used in infrastructure engineering:
-
-```text
-Plan
-  |
-Deploy
-  |
-Validate
-  |
-Document
-  |
-Automate
+```bash
+git clone https://github.com/<your-username>/dotfiles.git
+cd dotfiles
 ```
 
+Install packages:
+
+```bash
+./scripts/install.sh
+```
+
+Deploy configuration:
+
+```bash
+./scripts/bootstrap.sh
+```
+
+Restart your session or reboot to apply all changes.
+
 ---
 
-## Components
+# Design Principles
 
-Planned workstation stack:
+This repository follows several infrastructure engineering principles.
 
-* Hyprland Wayland compositor
-* Waybar status bar
-* Kitty terminal emulator
-* Neovim development environment
-* Shell customization
-* System automation scripts
-* Package management
-* Configuration management
+## Infrastructure as Code
+
+Configuration is stored in Git instead of being manually recreated.
+
+## Modular Design
+
+Each application maintains its own configuration directory.
+
+## Reproducibility
+
+A clean Arch Linux installation should be able to reproduce this workstation using only the contents of this repository.
+
+## Documentation
+
+Configuration decisions are documented rather than relying on memory.
+
+## Automation First
+
+Manual setup should eventually be replaced by repeatable scripts.
 
 ---
 
-## Philosophy
+# Current Platform
 
-This repository treats a personal workstation as infrastructure.
+| Component | Value |
+|-----------|-------|
+| Operating System | Arch Linux |
+| Desktop | Hyprland |
+| Display Server | Wayland |
+| Terminal | Foot |
+| Status Bar | Waybar |
+| Launcher | Rofi |
+| Notification Daemon | Mako |
+| Development Environment | VMware Virtual Machine |
 
-The objective is not only to configure a machine, but to create a documented and repeatable deployment process that can rebuild the environment from a clean Arch Linux installation.
+---
+
+# Roadmap
+
+Future improvements include:
+
+- Hyprlock integration
+- Hypridle configuration
+- Wallpaper management
+- Theme customization
+- Automated package installation
+- Bare-metal deployment
+- Additional development tooling
+- CI validation for configuration files
+
+---
+
+# Philosophy
+
+A workstation should be treated like any other piece of infrastructure.
+
+Rather than manually configuring a desktop every time hardware changes or an operating system is reinstalled, the entire environment should be reproducible from version-controlled configuration.
+
+The objective is not simply to customize Linux—it is to build a maintainable, documented, and repeatable workstation deployment process.
+
+---
+
+# License
+
+This repository is intended for personal use and educational purposes. Feel free to reference or adapt portions of the configuration for your own projects.
