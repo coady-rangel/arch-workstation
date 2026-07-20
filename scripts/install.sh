@@ -71,7 +71,26 @@ mkdir -p "$HOME/.local/bin"
 
 find "$REPO_ROOT/scripts" -maxdepth 1 -type f -executable | while read -r script; do
     name="$(basename "$script" .sh)"
-    ln -sf "$script" "$HOME/.local/bin/$name"
+
+    case "$name" in
+        install)
+            command_name="workstation-install"
+            ;;
+        bootstrap)
+            command_name="workstation-bootstrap"
+            ;;
+        deploy-configs)
+            command_name="workstation-deploy"
+            ;;
+        validate)
+            command_name="workstation-validate"
+            ;;
+        *)
+            command_name="$name"
+            ;;
+    esac
+
+    ln -sf "$script" "$HOME/.local/bin/$command_name"
 done
 
 echo "✓ Helper commands installed"

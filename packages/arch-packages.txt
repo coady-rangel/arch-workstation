@@ -43,3 +43,21 @@ hyprland
 waybar
 kitty
 neovim
+
+# Browsers
+firefox
+
+# Communication
+discord
+
+# Productivity
+evince
+file-roller
+gnome-calculator
+gnome-disk-utility
+
+# Media
+vlc
+
+# Gaming
+steam

@@ -3,40 +3,43 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INSTALL_SCRIPT="$SCRIPT_DIR/install.sh"
-DEPLOY_SCRIPT="$SCRIPT_DIR/deploy-configs.sh"
-VALIDATE_SCRIPT="$SCRIPT_DIR/validate.sh"
+
+STEPS=(
+    install.sh
+    deploy-configs.sh
+    fonts.sh
+    themes.sh
+    services.sh
+    validate.sh
+)
 
 error() {
     echo "Error: $*" >&2
     exit 1
 }
 
-[[ -x "$INSTALL_SCRIPT" ]] || error "install.sh not found or not executable."
-[[ -x "$DEPLOY_SCRIPT" ]] || error "deploy-configs.sh not found or not executable."
-[[ -x "$VALIDATE_SCRIPT" ]] || error "validate.sh not found or not executable."
-
 echo "================================="
-echo " Arch Workstation Bootstrap"
+echo "   Arch Workstation Bootstrap"
 echo "================================="
 
-echo
-echo "[1/3] Installing packages..."
-echo
+step=1
+total=${#STEPS[@]}
 
-"$INSTALL_SCRIPT"
+for script in "${STEPS[@]}"; do
+    path="$SCRIPT_DIR/$script"
+
+    [[ -x "$path" ]] || error "$script not found or not executable."
+
+    echo
+    echo "[$step/$total] Running $script"
+    echo "---------------------------------"
+
+    "$path"
+
+    ((step++))
+done
 
 echo
-echo "[2/3] Configuration deployment"
-echo
-
-"$DEPLOY_SCRIPT"
-
-echo
-echo "[3/3] System validation"
-echo
-
-"$VALIDATE_SCRIPT"
-
-echo
+echo "================================="
 echo "Bootstrap completed successfully."
+echo "================================="

@@ -1,2 +1,12 @@
-# Arch User Repository (AUR) packages
-# Add one package per line.
+# Browsers
+zen-browser-bin
+
+# Productivity
+obsidian
+onlyoffice-bin
+
+# Security
+bitwarden
+
+# Gaming
+runelite
