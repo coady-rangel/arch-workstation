@@ -128,6 +128,10 @@ arch-workstation/
 │   ├── arch-packages.txt
 │   └── aur-packages.txt
 │
+├── config/
+│   └── services/
+│       └── default.conf
+
 ├── scripts/
 │   ├── lib/
 │   │   └── common.sh
@@ -281,6 +285,33 @@ to display installer options.
 ---
 
 ## Configuration Deployment
+
+### Service Configuration
+
+Service behavior is defined in:
+
+```text
+config/services/default.conf
+```
+
+Each line uses this format:
+
+```text
+service-name|required
+service-name|optional
+```
+
+Required services are always enabled by `scripts/services.sh` and checked by `scripts/validate.sh`.
+
+Optional services are skipped by default. Enable them with:
+
+```bash
+./scripts/services.sh --enable-optional
+```
+
+Both scripts use the same manifest as the single source of truth, which keeps service deployment and validation consistent.
+
+---
 
 `scripts/deploy-configs.sh` creates symlinks from the repository into `~/.config`.
 
