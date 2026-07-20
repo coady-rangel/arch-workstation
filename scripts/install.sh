@@ -35,9 +35,21 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-info "Starting Arch workstation package installation..."
+[[ -r /etc/os-release ]] || error "Unable to identify the operating system."
 
-command_exists pacman || error "pacman was not found. This script is intended for Arch Linux."
+# shellcheck disable=SC1091
+source /etc/os-release
+
+[[ "${ID:-}" == "arch" ]] || error \
+    "Unsupported operating system: ${PRETTY_NAME:-unknown}. This installer requires Arch Linux."
+
+(( EUID != 0 )) || error \
+    "Do not run this installer as root. Run it as a regular user with sudo access."
+
+command_exists sudo || error "Required command not found: sudo"
+command_exists pacman || error "Required command not found: pacman"
+
+info "Starting Arch workstation package installation..."
 
 [[ -f "$PACKAGE_FILE" ]] || error "Package manifest not found: $PACKAGE_FILE"
 
