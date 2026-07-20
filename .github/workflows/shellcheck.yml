@@ -1,4 +1,4 @@
-name: Shell Script Validation
+name: Repository Validation
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
       - main
 
 jobs:
-  shellcheck:
-    name: Validate Shell Scripts
+  repository-validation:
+    name: Validate Repository
     runs-on: ubuntu-latest
 
     steps:
@@ -31,4 +31,8 @@ jobs:
       - name: Run ShellCheck
         run: |
           find scripts -type f -name '*.sh' \
-            -exec shellcheck -x -P SCRIPTDIR {} \;          
+            -exec shellcheck -x -P SCRIPTDIR {} \;
+
+      - name: Run repository validation
+        run: |
+          ./scripts/repo-validate.sh

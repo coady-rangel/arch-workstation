@@ -91,7 +91,29 @@ bootstrap.sh
     ├── themes.sh
     ├── services.sh
     └── validate.sh
+```## Validation
+
+The current validation script checks every directory under `configs/`.
+
+For each managed configuration, it verifies that:
+
+1. The corresponding target under `~/.config` is a symlink.
+2. The symlink resolves to the expected repository directory.
+
+Run validation with:
+
+```bash
+./scripts/validate.sh
 ```
+
+or, after helper commands are installed:
+
+```bash
+workstation-validate
+```
+
+Current validation is intentionally limited to configuration deployment. Package, command, service, font, theme, and runtime checks are planned.
+
 
 Some setup stages are currently placeholders and are documented in the roadmap.
 
@@ -107,12 +129,6 @@ arch-workstation/
 │
 ├── configs/
 │   ├── bash/
-│   │   ├── aliases
-│   │   ├── environment
-│   │   ├── functions
-│   │   ├── fzf
-│   │   ├── prompt
-│   │   └── zoxide
 │   ├── btop/
 │   ├── foot/
 │   ├── git/
@@ -124,14 +140,16 @@ arch-workstation/
 │   ├── rofi/
 │   └── waybar/
 │
+├── config/
+│   ├── dependencies/
+│   │   └── default.conf
+│   └── services/
+│       └── default.conf
+│
 ├── packages/
 │   ├── arch-packages.txt
 │   └── aur-packages.txt
 │
-├── config/
-│   └── services/
-│       └── default.conf
-
 ├── scripts/
 │   ├── lib/
 │   │   └── common.sh
@@ -141,6 +159,7 @@ arch-workstation/
 │   ├── fonts.sh
 │   ├── install.sh
 │   ├── power-menu.sh
+│   ├── repo-validate.sh
 │   ├── services.sh
 │   ├── themes.sh
 │   └── validate.sh
@@ -390,10 +409,40 @@ A complete dependency audit for these helper scripts is still pending.
 
 ---
 
-
 ## Validation
 
-The current validation script checks every directory under `configs/`.
+Validation is split into two stages:
+
+- Repository validation
+- Workstation validation
+
+Repository validation verifies that the repository itself is internally
+consistent before deployment. Workstation validation verifies that a deployed
+system matches the repository's expected state.
+
+### Repository Validation
+
+The repository validation script checks:
+
+- Required repository structure
+- Required files
+- Service manifest syntax
+- Dependency manifest syntax
+- Script executable permissions
+
+Run validation with:
+
+```bash
+./scripts/repo-validate.sh
+```
+
+This validation is intended to catch repository issues before deployment and is
+also executed automatically by GitHub Actions.
+
+### Workstation Validation
+
+The workstation validation script checks every managed configuration under
+`configs/`.
 
 For each managed configuration, it verifies that:
 
@@ -412,13 +461,29 @@ or, after helper commands are installed:
 workstation-validate
 ```
 
-Current validation is intentionally limited to configuration deployment. Package, command, service, font, theme, and runtime checks are planned.
+Current workstation validation is intentionally limited to configuration
+deployment. Package, command, service, font, theme, and runtime checks are
+planned.
 
 ---
 
 ## Continuous Integration
 
-GitHub Actions runs ShellCheck against the repository scripts.
+GitHub Actions validates the repository on every push and pull request.
+
+The current validation pipeline performs:
+
+- Bash syntax validation
+- ShellCheck
+- Repository validation
+
+Repository validation includes:
+
+- Required repository structure
+- Required files
+- Service manifest validation
+- Dependency manifest validation
+- Script executable permission validation
 
 The workflow uses:
 
@@ -591,6 +656,7 @@ After pushing, verify that the GitHub Actions workflow passes.
 
 ### Version 0.4 — Expanded validation
 
+- [x] Add repository validation
 - [ ] Validate required commands
 - [ ] Validate installed packages
 - [ ] Validate helper-command symlinks
