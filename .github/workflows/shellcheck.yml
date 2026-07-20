@@ -25,11 +25,10 @@ jobs:
 
       - name: Check Bash syntax
         run: |
-          for script in scripts/*.sh; do
-            echo "Checking syntax: $script"
-            bash -n "$script"
-          done
+          find scripts -type f -name '*.sh' \
+            -exec bash -n {} \;
 
       - name: Run ShellCheck
         run: |
-          shellcheck -x -P SCRIPTDIR scripts/*.sh
+          find scripts -type f -name '*.sh' \
+            -exec shellcheck -x -P SCRIPTDIR {} \;          
