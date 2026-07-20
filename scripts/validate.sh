@@ -7,6 +7,7 @@ source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 SOURCE_DIR="$REPO_ROOT/configs"
 TARGET_DIR="$HOME/.config"
 SERVICE_MANIFEST="$REPO_ROOT/config/services/default.conf"
+DEPENDENCY_MANIFEST="$REPO_ROOT/config/dependencies/default.conf"
 
 failures=0
 
@@ -106,10 +107,30 @@ validate_services() {
     done < "$SERVICE_MANIFEST"
 }
 
+validate_dependencies() {
+    info "Validating dependencies..."
+
+    while IFS='|' read -r dependency requirement; do
+        [[ -z "$dependency" || "$dependency" =~ ^# ]] && continue
+
+        if command -v "$dependency" >/dev/null 2>&1; then
+            pass "$dependency is installed"
+        else
+            if [[ "$requirement" == "required" ]]; then
+                fail "$dependency is not installed"
+            else
+                info "$dependency is not installed (optional)"
+            fi
+        fi
+    done < "$DEPENDENCY_MANIFEST"
+}
+
 validate_config_links
 
 echo
 validate_services
+
+validate_dependencies
 
 echo
 
