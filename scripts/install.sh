@@ -8,6 +8,19 @@ info "Starting Arch workstation package installation..."
 
 PACKAGE_FILE="$REPO_ROOT/packages/arch-packages.txt"
 AUR_PACKAGE_FILE="$REPO_ROOT/packages/aur-packages.txt"
+UPDATE_SYSTEM=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --update)
+            UPDATE_SYSTEM=true
+            ;;
+        *)
+            error "Unknown option: $1"
+            ;;
+    esac
+    shift
+done
 
 command_exists pacman || error "pacman was not found. This script is intended for Arch Linux."
 
@@ -22,10 +35,11 @@ mapfile -t packages < <(
 
 (( ${#packages[@]} > 0 )) || error "No packages were found in $PACKAGE_FILE"
 
-info "Found ${#packages[@]} official packages."
 
-info "Updating system..."
-sudo pacman -Syu --noconfirm
+if $UPDATE_SYSTEM; then
+    info "Updating system packages..."
+    sudo pacman -Syu --noconfirm
+fi
 
 info "Installing official packages..."
 sudo pacman -S --needed --noconfirm "${packages[@]}"

@@ -41,7 +41,7 @@ ncdu
 
 hyprland
 waybar
-kitty
+foot
 neovim
 
 # Browsers
