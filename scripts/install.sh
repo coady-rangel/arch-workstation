@@ -4,7 +4,16 @@ set -Eeuo pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
-info "Starting Arch workstation package installation..."
+usage() {
+    cat <<'EOF'
+Usage: install.sh [OPTIONS]
+
+Options:
+  --update    Update system packages before installing
+  --help      Show this help message
+EOF
+}
+
 
 PACKAGE_FILE="$REPO_ROOT/packages/arch-packages.txt"
 AUR_PACKAGE_FILE="$REPO_ROOT/packages/aur-packages.txt"
@@ -15,12 +24,18 @@ while [[ $# -gt 0 ]]; do
         --update)
             UPDATE_SYSTEM=true
             ;;
+        --help)
+            usage
+            exit 0
+            ;;
         *)
             error "Unknown option: $1"
             ;;
     esac
     shift
 done
+
+info "Starting Arch workstation package installation..."
 
 command_exists pacman || error "pacman was not found. This script is intended for Arch Linux."
 
