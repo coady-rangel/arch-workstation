@@ -9,4 +9,4 @@ onlyoffice-bin
 bitwarden
 
 # Gaming
-runelite
+jagex-launcher

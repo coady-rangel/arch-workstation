@@ -2,10 +2,12 @@
 
 set -Eeuo pipefail
 
-echo "Starting Arch workstation package installation..."
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolve the real path of this script, even when launched via a symlink.
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+
+echo "Starting Arch workstation package installation..."
 
 PACKAGE_FILE="$REPO_ROOT/packages/arch-packages.txt"
 AUR_PACKAGE_FILE="$REPO_ROOT/packages/aur-packages.txt"
@@ -49,8 +51,21 @@ if [[ -f "$AUR_PACKAGE_FILE" ]]; then
     )
 
     if (( ${#aur_packages[@]} > 0 )); then
-        command -v paru >/dev/null 2>&1 \
-            || error "paru is required to install AUR packages."
+        if ! command -v paru >/dev/null 2>&1; then
+            echo "paru not found. Installing..."
+
+            sudo pacman -S --needed --noconfirm base-devel git
+
+            tmpdir="$(mktemp -d)"
+            git clone https://aur.archlinux.org/paru.git "$tmpdir/paru"
+
+            (
+                cd "$tmpdir/paru"
+                makepkg -si --noconfirm
+            )
+
+            rm -rf "$tmpdir"
+        fi
 
         echo "Installing ${#aur_packages[@]} AUR packages..."
         paru -S --needed --noconfirm "${aur_packages[@]}"
