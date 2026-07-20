@@ -2,7 +2,7 @@
 
 set -Eeuo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
 STEPS=(
     install.sh
@@ -13,14 +13,9 @@ STEPS=(
     validate.sh
 )
 
-error() {
-    echo "Error: $*" >&2
-    exit 1
-}
-
-echo "================================="
-echo "   Arch Workstation Bootstrap"
-echo "================================="
+info "================================="
+info "   Arch Workstation Bootstrap"
+info "================================="
 
 step=1
 total=${#STEPS[@]}
@@ -31,8 +26,8 @@ for script in "${STEPS[@]}"; do
     [[ -x "$path" ]] || error "$script not found or not executable."
 
     echo
-    echo "[$step/$total] Running $script"
-    echo "---------------------------------"
+    info "[$step/$total] Running $script"
+    info "---------------------------------"
 
     "$path"
 
@@ -40,6 +35,6 @@ for script in "${STEPS[@]}"; do
 done
 
 echo
-echo "================================="
-echo "Bootstrap completed successfully."
-echo "================================="
+success "================================="
+success "Bootstrap completed successfully."
+success "================================="

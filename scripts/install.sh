@@ -2,22 +2,14 @@
 
 set -Eeuo pipefail
 
-# Resolve the real path of this script, even when launched via a symlink.
-SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
-SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
-REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
-echo "Starting Arch workstation package installation..."
+info "Starting Arch workstation package installation..."
 
 PACKAGE_FILE="$REPO_ROOT/packages/arch-packages.txt"
 AUR_PACKAGE_FILE="$REPO_ROOT/packages/aur-packages.txt"
 
-error() {
-    echo "Error: $*" >&2
-    exit 1
-}
-
-command -v pacman >/dev/null 2>&1 || error "pacman was not found. This script is intended for Arch Linux."
+command_exists pacman || error "pacman was not found. This script is intended for Arch Linux."
 
 [[ -f "$PACKAGE_FILE" ]] || error "Package manifest not found: $PACKAGE_FILE"
 
@@ -30,12 +22,12 @@ mapfile -t packages < <(
 
 (( ${#packages[@]} > 0 )) || error "No packages were found in $PACKAGE_FILE"
 
-echo "Found ${#packages[@]} official packages."
+info "Found ${#packages[@]} official packages."
 
-echo "Updating system..."
+info "Updating system..."
 sudo pacman -Syu --noconfirm
 
-echo "Installing official packages..."
+info "Installing official packages..."
 sudo pacman -S --needed --noconfirm "${packages[@]}"
 
 ###############################################################################
@@ -51,8 +43,8 @@ if [[ -f "$AUR_PACKAGE_FILE" ]]; then
     )
 
     if (( ${#aur_packages[@]} > 0 )); then
-        if ! command -v paru >/dev/null 2>&1; then
-            echo "paru not found. Installing..."
+        if ! command_exists paru; then
+            warn "paru not found. Installing..."
 
             sudo pacman -S --needed --noconfirm base-devel git
 
@@ -67,20 +59,20 @@ if [[ -f "$AUR_PACKAGE_FILE" ]]; then
             rm -rf "$tmpdir"
         fi
 
-        echo "Installing ${#aur_packages[@]} AUR packages..."
+        info "Installing ${#aur_packages[@]} AUR packages..."
         paru -S --needed --noconfirm "${aur_packages[@]}"
     else
-        echo "No AUR packages found."
+        info "No AUR packages found."
     fi
 else
-    echo "No AUR package manifest found. Skipping."
+    info "No AUR package manifest found. Skipping."
 fi
 
 ###############################################################################
 # Install helper commands
 ###############################################################################
 
-echo "Installing helper commands..."
+info "Installing helper commands..."
 
 mkdir -p "$HOME/.local/bin"
 
@@ -108,6 +100,5 @@ find "$REPO_ROOT/scripts" -maxdepth 1 -type f -executable | while read -r script
     ln -sf "$script" "$HOME/.local/bin/$command_name"
 done
 
-echo "✓ Helper commands installed"
-
-echo "Package installation complete."
+success "Helper commands installed"
+success "Package installation complete."
