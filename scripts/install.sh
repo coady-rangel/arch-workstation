@@ -63,6 +63,13 @@ if [[ -f "$AUR_PACKAGE_FILE" ]]; then
             sudo pacman -S --needed --noconfirm base-devel git
 
             tmpdir="$(mktemp -d)"
+
+            cleanup() {
+                rm -rf "$tmpdir"
+            }
+
+            trap cleanup EXIT
+			
             git clone https://aur.archlinux.org/paru.git "$tmpdir/paru"
 
             (
@@ -70,7 +77,6 @@ if [[ -f "$AUR_PACKAGE_FILE" ]]; then
                 makepkg -si --noconfirm
             )
 
-            rm -rf "$tmpdir"
         fi
 
         info "Installing ${#aur_packages[@]} AUR packages..."
