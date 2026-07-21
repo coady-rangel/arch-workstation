@@ -2,12 +2,17 @@
 
 set -Eeuo pipefail
 
+# Name: validate.sh
+# Purpose: Validate deployed configurations, services, and dependencies.
+# Usage: ./scripts/validate.sh
+# Dependencies: lib/common.sh, systemctl
+
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
-SOURCE_DIR="$REPO_ROOT/configs"
-TARGET_DIR="$HOME/.config"
-SERVICE_MANIFEST="$REPO_ROOT/config/services/default.conf"
-DEPENDENCY_MANIFEST="$REPO_ROOT/config/dependencies/default.conf"
+readonly SOURCE_DIR="$REPO_ROOT/configs"
+readonly TARGET_DIR="$HOME/.config"
+readonly SERVICE_MANIFEST="$REPO_ROOT/config/services/default.conf"
+readonly DEPENDENCY_MANIFEST="$REPO_ROOT/config/dependencies/default.conf"
 
 failures=0
 
@@ -20,32 +25,43 @@ fail() {
     ((failures += 1))
 }
 
+trim() {
+    local value=$1
+
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+
+    printf '%s\n' "$value"
+}
+
 validate_config_links() {
-    [[ -d "$SOURCE_DIR" ]] || error "Configuration directory not found: $SOURCE_DIR"
+    local source
+    local name
+    local target
+    local resolved_target
+    local resolved_source
+
+    [[ -d $SOURCE_DIR ]] ||
+        error "Configuration directory not found: $SOURCE_DIR"
 
     info "Validating deployed configuration links..."
-    echo
+    printf '\n'
 
     for source in "$SOURCE_DIR"/*; do
-        [[ -d "$source" ]] || continue
+        [[ -d $source ]] || continue
 
-        local name
-        local target
-        local resolved_target
-        local resolved_source
-
-        name="$(basename "$source")"
+        name=$(basename "$source")
         target="$TARGET_DIR/$name"
 
-        if [[ ! -L "$target" ]]; then
+        if [[ ! -L $target ]]; then
             fail "$name is not a symlink"
             continue
         fi
 
-        resolved_target="$(readlink -f "$target")"
-        resolved_source="$(readlink -f "$source")"
+        resolved_target=$(readlink -f "$target")
+        resolved_source=$(readlink -f "$source")
 
-        if [[ "$resolved_target" != "$resolved_source" ]]; then
+        if [[ $resolved_target != "$resolved_source" ]]; then
             fail "$name points to $resolved_target"
             continue
         fi
@@ -55,26 +71,28 @@ validate_config_links() {
 }
 
 validate_services() {
-    [[ -f "$SERVICE_MANIFEST" ]] \
-        || error "Service manifest not found: $SERVICE_MANIFEST"
+    local service
+    local policy
 
-    command_exists systemctl || error "systemctl not found."
+    [[ -f $SERVICE_MANIFEST ]] ||
+        error "Service manifest not found: $SERVICE_MANIFEST"
+
+    command_exists systemctl ||
+        error "Required command not found: systemctl"
 
     info "Validating required system services..."
-    echo
+    printf '\n'
 
     while IFS='|' read -r service policy; do
-        service="${service#"${service%%[![:space:]]*}"}"
-        service="${service%"${service##*[![:space:]]}"}"
-        policy="${policy#"${policy%%[![:space:]]*}"}"
-        policy="${policy%"${policy##*[![:space:]]}"}"
+        service=$(trim "$service")
+        policy=$(trim "$policy")
 
-        [[ -z "$service" ]] && continue
-        [[ "$service" == \#* ]] && continue
+        [[ -n $service ]] || continue
+        [[ $service != \#* ]] || continue
 
-        policy="${policy,,}"
+        policy=${policy,,}
 
-        case "$policy" in
+        case $policy in
             required)
                 ;;
             optional)
@@ -108,34 +126,58 @@ validate_services() {
 }
 
 validate_dependencies() {
+    local dependency
+    local requirement
+
+    [[ -f $DEPENDENCY_MANIFEST ]] ||
+        error "Dependency manifest not found: $DEPENDENCY_MANIFEST"
+
     info "Validating dependencies..."
+    printf '\n'
 
     while IFS='|' read -r dependency requirement; do
-        [[ -z "$dependency" || "$dependency" =~ ^# ]] && continue
+        dependency=$(trim "$dependency")
+        requirement=$(trim "$requirement")
+        requirement=${requirement,,}
 
-        if command -v "$dependency" >/dev/null 2>&1; then
+        [[ -n $dependency ]] || continue
+        [[ $dependency != \#* ]] || continue
+
+        case $requirement in
+            required | optional)
+                ;;
+            *)
+                fail "Unknown requirement '$requirement' for $dependency"
+                continue
+                ;;
+        esac
+
+        if command_exists "$dependency"; then
             pass "$dependency is installed"
+        elif [[ $requirement == required ]]; then
+            fail "$dependency is not installed"
         else
-            if [[ "$requirement" == "required" ]]; then
-                fail "$dependency is not installed"
-            else
-                info "$dependency is not installed (optional)"
-            fi
+            info "$dependency is not installed (optional)"
         fi
     done < "$DEPENDENCY_MANIFEST"
 }
 
-validate_config_links
+main() {
+    validate_config_links
 
-echo
-validate_services
+    printf '\n'
+    validate_services
 
-validate_dependencies
+    printf '\n'
+    validate_dependencies
 
-echo
+    printf '\n'
 
-if (( failures > 0 )); then
-    error "Validation failed with $failures issue(s)."
-fi
+    if (( failures > 0 )); then
+        error "Validation failed with $failures issue(s)."
+    fi
 
-success "All workstation validation checks passed."
+    success "All workstation validation checks passed."
+}
+
+main "$@"
