@@ -38,9 +38,6 @@ The core deployment architecture is implemented:
 
 The following areas are still in progress:
 
-- Service automation
-- Font setup automation
-- Theme setup automation
 - Complete dependency auditing
 - Expanded workstation health validation
 - Clean-VM deployment testing
@@ -461,9 +458,15 @@ or, after helper commands are installed:
 workstation-validate
 ```
 
-Current workstation validation is intentionally limited to configuration
-deployment. Package, command, service, font, theme, and runtime checks are
-planned.
+Current workstation validation currently verifies:
+
+- Configuration symlinks
+- Required services
+- Required dependencies
+
+Future releases will expand validation to installed packages,
+Hyprland configuration syntax, fonts, themes, helper commands,
+and additional runtime health checks.
 
 ---
 
@@ -622,6 +625,25 @@ After pushing, verify that the GitHub Actions workflow passes.
 
 ---
 
+## Current Milestone
+
+**Version 0.2.0**
+
+Deployment Framework Complete
+
+Completed:
+
+- Manifest-driven package installation
+- Automatic AUR installation
+- Bootstrap orchestration
+- Configuration deployment
+- Repository validation
+- Workstation validation
+- Helper command installation
+- Standardized Bash scripting framework
+
+---
+
 ## Roadmap
 
 ### Version 0.1 — Repository foundation
@@ -629,12 +651,14 @@ After pushing, verify that the GitHub Actions workflow passes.
 - [x] Create repository structure
 - [x] Add package manifests
 - [x] Add initial application configuration
-- [x] Add installation script
+- [x] Add installation framework
 - [x] Add configuration deployment
 - [x] Add bootstrap orchestration
 - [x] Add shared shell utilities
+- [x] Add repository validation
+- [x] Add workstation validation
+- [x] Standardize Bash scripting
 - [x] Add ShellCheck continuous integration
-- [x] Add configuration-link validation
 
 ### Version 0.2 — Dependency completion
 
@@ -694,8 +718,6 @@ Current limitations include:
 
 - Font automation is not implemented.
 - Theme automation is not implemented.
-- Service automation is not implemented.
-- Validation currently focuses on configuration symlinks.
 - Package manifests have not completed a full dependency audit.
 - Machine-specific monitor and hardware configuration may require manual adjustment.
 - The project has primarily been tested in a VMware environment.
