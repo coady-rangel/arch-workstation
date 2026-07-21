@@ -2,50 +2,68 @@
 
 set -Eeuo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SOURCE_DIR="$REPO_ROOT/configs"
-TARGET_DIR="$HOME/.config"
+# Name: deploy-configs.sh
+# Purpose: Deploy configuration directories into ~/.config using symlinks.
+# Usage: ./scripts/deploy-configs.sh
+# Dependencies: lib/common.sh
 
-error() {
-    echo "Error: $*" >&2
-    exit 1
-}
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
-[[ -d "$SOURCE_DIR" ]] || error "Configuration directory not found."
+readonly SOURCE_DIR="$REPO_ROOT/configs"
+readonly TARGET_DIR="$HOME/.config"
 
-mkdir -p "$TARGET_DIR"
+deploy_config() {
+    local source=$1
+    local name
+    local target
+    local current
+    local backup
 
-echo "Deploying configuration..."
-
-for source in "$SOURCE_DIR"/*; do
-    [[ -d "$source" ]] || continue
-
-    name="$(basename "$source")"
+    name=$(basename "$source")
     target="$TARGET_DIR/$name"
 
-    echo
-    echo "[+] $name"
+    printf '\n'
+    info "[+] $name"
 
-    if [[ -L "$target" ]]; then
-        current="$(readlink -f "$target")"
+    if [[ -L $target ]]; then
+        current=$(readlink -f "$target")
 
-        if [[ "$current" == "$source" ]]; then
-            echo "    Already linked."
-            continue
+        if [[ $current == "$source" ]]; then
+            info "Already linked."
+            return
         fi
 
         rm "$target"
-    elif [[ -e "$target" ]]; then
+
+    elif [[ -e $target ]]; then
         backup="${target}.backup-$(date +%Y%m%d-%H%M%S)"
         mv "$target" "$backup"
-        echo "    Backed up existing configuration to:"
-        echo "    $backup"
+
+        warn "Backed up existing configuration:"
+        printf '  %s\n' "$backup"
     fi
 
     ln -s "$source" "$target"
-    echo "    Symlink created."
-done
+    success "Symlink created."
+}
 
-echo
-echo "Configuration deployment complete."
+main() {
+    local source
+
+    [[ -d $SOURCE_DIR ]] ||
+        error "Configuration directory not found."
+
+    mkdir -p "$TARGET_DIR"
+
+    info "Deploying configuration..."
+
+    for source in "$SOURCE_DIR"/*; do
+        [[ -d $source ]] || continue
+        deploy_config "$source"
+    done
+
+    printf '\n'
+    success "Configuration deployment complete."
+}
+
+main "$@"
