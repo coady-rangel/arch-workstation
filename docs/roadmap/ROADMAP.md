@@ -69,7 +69,7 @@ Established the project's engineering governance, documentation standards, relea
 
 # Planned
 
-## v0.5.0 — Validation & Reliability
+## v5.0.0 — Validation & Reliability
 
 Increase deployment confidence and improve validation.
 
@@ -92,7 +92,7 @@ Increase deployment confidence and improve validation.
 
 # Planned
 
-## v0.6.0 — Workstation Operations
+## v6.0.0 — Workstation Operations
 
 Improve day-to-day management of the workstation.
 
@@ -114,7 +114,7 @@ Improve day-to-day management of the workstation.
 
 # Planned
 
-## v0.7.0 — Platform Architecture
+## v7.0.0 — Platform Architecture
 
 Expand the project beyond a single workstation.
 
@@ -128,9 +128,9 @@ Expand the project beyond a single workstation.
 
 ---
 
-# Version 1.0
+# Long-Term Vision
 
-## Arch Linux Workstation Infrastructure
+## v8.0.0 — Stable Arch Linux Workstation Platform
 
 Deliver a fully documented, reproducible workstation platform capable of provisioning a complete development environment from a clean Arch Linux installation.
 
