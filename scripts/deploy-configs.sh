@@ -64,6 +64,9 @@ main() {
 
     printf '\n'
     success "Configuration deployment complete."
+    info "Repository root: $REPO_ROOT"
+    info "If this repository is moved or renamed, rerun deploy-configs.sh to refresh symlinks."
 }
 
 main "$@"
+
