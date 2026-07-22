@@ -22,7 +22,7 @@ The project emphasizes:
 
 # Current Release
 
-## v0.3.0 — Governance Foundation
+## v3.0.0 — Governance Foundation
 
 **Status:** Complete
 
@@ -32,7 +32,7 @@ Established the project's engineering governance, documentation standards, relea
 
 # Active Milestone
 
-## v0.4.0 — Desktop Completion
+## v4.0.0 — Desktop Completion
 
 **Goal:** Deliver a polished daily-driver desktop environment.
 

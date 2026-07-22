@@ -8,8 +8,8 @@ Detailed release information is stored in the `release_notes/` directory.
 
 ## Releases
 
-- [v0.3.0 — Governance Foundation](release_notes/v0.3.0.md)
-- [v0.2.0 — Deployment Framework & Infrastructure Standardization](release_notes/v0.2.0.md)
+- [v3.0.0 — Governance Foundation](release_notes/v3.0.0.md)
+- [v2.0.0 — Deployment Framework & Infrastructure Standardization](release_notes/v2.0.0.md)
 - [v0.1.0 — Functional Desktop Foundation](release_notes/v0.1.0.md)
 
 ---

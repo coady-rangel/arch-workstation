@@ -63,7 +63,7 @@ Core engineering principles include:
 
 **Current Version**
 
-**v0.3.0 — Governance Foundation**
+**v3.0.0 — Governance Foundation**
 
 Completed
 
