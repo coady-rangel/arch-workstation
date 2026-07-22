@@ -7,7 +7,10 @@
 # Resolve the real path of the calling script, even when launched via symlinks.
 SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[1]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+# shellcheck disable=SC2034
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+# shellcheck disable=SC2034
+readonly REPO_ROOT
 
 ###############################################################################
 # Logging

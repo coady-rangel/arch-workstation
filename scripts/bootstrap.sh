@@ -7,6 +7,7 @@ set -Eeuo pipefail
 # Usage: ./scripts/bootstrap.sh
 # Dependencies: lib/common.sh
 
+# shellcheck source=lib/common.sh
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
 
 readonly STEPS=(
