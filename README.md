@@ -10,18 +10,19 @@ This project applies software engineering and infrastructure engineering princip
 
 A workstation is infrastructure.
 
-It has dependencies, configuration drift, operational state, recovery requirements, and lifecycle management just like any production system.
+Like production infrastructure, it has dependencies, configuration drift, operational state, recovery requirements, and lifecycle management.
 
-Rather than configuring a desktop manually, this project defines the entire workstation through source-controlled configuration and repeatable deployment workflows.
+Rather than configuring a desktop manually, this repository defines an entire workstation through source-controlled configuration and repeatable deployment workflows.
 
-The long-term goal is to create an engineering-grade workstation platform that is:
+The long-term goal is to build an engineering-grade workstation platform that is:
 
 - Reproducible
 - Maintainable
 - Extensible
-- Documented
+- Automated
 - Validated
-- Easy to rebuild
+- Fully Documented
+- Easy to Rebuild
 
 ---
 
@@ -36,54 +37,96 @@ Every meaningful change should improve one or more of the following:
 - Automation
 - Validation
 - Documentation
-- User experience
+- User Experience
 
-Project governance is documented in:
+Core engineering philosophy is documented in:
 
-```
-docs/
-├── PROJECT_CONSTITUTION.md
-├── foundations/
-├── planning/
-└── roadmap/
-```
+- `docs/PROJECT_CONSTITUTION.md`
+- `docs/foundations/PRINCIPLES.md`
+- `docs/foundations/ENGINEERING_MAXIMS.md`
 
-Core engineering principles include:
+The project emphasizes:
 
-- Invest in systems that reduce the cost of future work.
-- Design systems before designing features.
+- Design systems before features.
 - Prefer clarity over cleverness.
+- Automate repetitive work.
 - Validate continuously.
-- Document the why—not just the how.
+- Document the *why* as well as the *how*.
 - Build for long-term maintainability.
 
 ---
 
 # Project Status
 
-**Current Version**
+## Current Release
 
 **v3.0.0 — Governance Foundation**
 
-Completed
+### Completed
 
 - Infrastructure deployment framework
-- Package management
-- Configuration deployment
-- Validation tooling
-- Repository validation
 - Bootstrap orchestration
+- Manifest-driven package management
+- Configuration deployment
+- Repository validation
+- Workstation validation
+- Continuous Integration
 - Engineering governance
-- Project roadmap
-- Engineering principles
-- Documentation standards
+- Historical documentation
+- Release management framework
+- Versioning policy
 
-Current Focus
+### Current Focus
 
 - Desktop completion
-- Validation expansion
-- First-run experience
+- Expanded validation
+- Improved first-run experience
 - User experience improvements
+
+---
+
+# Documentation
+
+Project documentation is organized by purpose.
+
+## Engineering Governance
+
+| Document | Purpose |
+|----------|---------|
+| `docs/PROJECT_CONSTITUTION.md` | Project mission, governance, and engineering standards |
+| `docs/foundations/PRINCIPLES.md` | Core engineering principles |
+| `docs/foundations/ENGINEERING_MAXIMS.md` | Practical engineering guidelines |
+| `docs/history/decisions/` | Architecture and engineering decisions |
+
+---
+
+## Planning
+
+| Document | Purpose |
+|----------|---------|
+| `docs/roadmap/ROADMAP.md` | Future roadmap and project milestones |
+| `docs/planning/PROPOSED_FEATURES.md` | Proposed enhancements and future ideas |
+
+---
+
+## Release Management
+
+| Document | Purpose |
+|----------|---------|
+| `docs/roadmap/CHANGELOG.md` | Chronological release history |
+| `docs/roadmap/release_notes/` | Detailed release notes for each version |
+| `docs/history/VERSIONING.md` | Semantic versioning and release policy |
+| `docs/templates/RELEASE_NOTE_TEMPLATE.md` | Standard template for future releases |
+
+---
+
+## Project History
+
+| Document | Purpose |
+|----------|---------|
+| `docs/history/README.md` | Overview of historical documentation |
+| `docs/history/RELEASE_HISTORY.md` | High-level release history |
+| `docs/history/REPOSITORY_EVOLUTION.md` | Evolution of the repository over time |
 
 ---
 
@@ -108,9 +151,9 @@ Current Focus
           Reproducible Workstation
 ```
 
-The complete deployment workflow is orchestrated by:
+The complete deployment process is orchestrated through:
 
-```
+```text
 scripts/bootstrap.sh
 ```
 
@@ -121,16 +164,30 @@ scripts/bootstrap.sh
 ```text
 arch-workstation/
 
-configs/        Application configuration
-packages/       Package manifests
-scripts/        Deployment automation
-config/         Deployment manifests
-
-docs/
-├── PROJECT_CONSTITUTION.md
-├── foundations/
-├── planning/
-└── roadmap/
+├── config/
+├── configs/
+├── packages/
+├── scripts/
+│
+├── docs/
+│   ├── foundations/
+│   ├── history/
+│   │   ├── decisions/
+│   │   ├── README.md
+│   │   ├── RELEASE_HISTORY.md
+│   │   ├── REPOSITORY_EVOLUTION.md
+│   │   └── VERSIONING.md
+│   │
+│   ├── planning/
+│   ├── roadmap/
+│   │   ├── CHANGELOG.md
+│   │   ├── ROADMAP.md
+│   │   └── release_notes/
+│   │
+│   ├── templates/
+│   └── PROJECT_CONSTITUTION.md
+│
+└── README.md
 ```
 
 ---
@@ -141,14 +198,15 @@ Current capabilities include:
 
 - Manifest-driven package installation
 - Automatic AUR installation
+- Bootstrap orchestration
 - Configuration deployment
 - Automatic configuration backup
 - Managed symbolic links
-- Bootstrap orchestration
 - Repository validation
 - Workstation validation
 - Helper command installation
-- Continuous integration with ShellCheck
+- GitHub Actions CI
+- ShellCheck integration
 
 ---
 
@@ -160,15 +218,6 @@ Validation occurs in two stages.
 
 Verifies repository integrity before deployment.
 
-Checks include:
-
-- Repository structure
-- Required files
-- Manifest syntax
-- Script permissions
-
-Run:
-
 ```bash
 ./scripts/repo-validate.sh
 ```
@@ -179,14 +228,6 @@ Run:
 
 Verifies that a deployed workstation matches the expected repository state.
 
-Current validation includes:
-
-- Configuration symlinks
-- Required services
-- Required dependencies
-
-Run:
-
 ```bash
 ./scripts/validate.sh
 ```
@@ -196,8 +237,6 @@ or
 ```bash
 workstation-validate
 ```
-
-Validation coverage will continue expanding throughout future releases.
 
 ---
 
@@ -227,24 +266,30 @@ Development follows a documented engineering lifecycle.
 
 ```text
 Idea
-    │
-    ▼
+ │
+ ▼
 Proposal
-    │
-    ▼
-Roadmap
-    │
-    ▼
+ │
+ ▼
+Planning
+ │
+ ▼
 Implementation
-    │
-    ▼
+ │
+ ▼
 Validation
-    │
-    ▼
+ │
+ ▼
 Documentation
-    │
-    ▼
-Release
+ │
+ ▼
+Release Notes
+ │
+ ▼
+Git Tag
+ │
+ ▼
+GitHub Release
 ```
 
 Every completed milestone should include:
@@ -258,51 +303,15 @@ Every completed milestone should include:
 
 ---
 
-# Documentation
-
-Additional documentation is organized under the `docs/` directory.
-
-| Document | Purpose |
-|----------|---------|
-| PROJECT_CONSTITUTION.md | Project mission and governance |
-| foundations/ | Engineering philosophy and principles |
-| planning/ | Feature proposals and design work |
-| roadmap/ | Current roadmap and release planning |
-
----
-
-# Roadmap
-
-Current milestone:
-
-**v0.3 – Governance Foundation**
-
-Upcoming milestones include:
-
-- Desktop completion
-- Expanded validation
-- User experience improvements
-- First-run automation
-- Plugin architecture
-- AI-assisted workstation tooling
-
-For the complete roadmap, see:
-
-```
-docs/roadmap/ROADMAP.md
-```
-
----
-
 # Design Principles
 
-The workstation is designed around several long-term engineering goals.
+The workstation is built around long-term engineering goals:
 
 - Infrastructure as Code
 - Reproducibility
 - Idempotency
-- Safety
 - Automation
+- Safety
 - Modularity
 - Validation
 - Documentation
@@ -314,13 +323,13 @@ The workstation is designed around several long-term engineering goals.
 
 Every push is automatically validated using GitHub Actions.
 
-Current checks include:
+Current validation includes:
 
 - Bash syntax
 - ShellCheck
 - Repository validation
 
-Local verification before committing:
+Recommended local verification:
 
 ```bash
 git diff --check
@@ -347,15 +356,16 @@ shellcheck -x -P SCRIPTDIR scripts/*.sh
 
 # Contributing
 
-This project follows documented engineering standards.
-
 Before implementing significant changes:
 
 1. Review the Project Constitution.
-2. Review the Roadmap.
-3. Keep commits focused.
-4. Validate before committing.
-5. Update documentation alongside code.
+2. Review the Engineering Principles.
+3. Review the Roadmap.
+4. Follow the documented versioning framework.
+5. Keep commits focused.
+6. Validate before committing.
+7. Update documentation alongside code.
+8. Publish release notes for official releases.
 
 ---
 
