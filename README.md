@@ -1,8 +1,10 @@
 # Arch Linux Workstation Infrastructure
 
-A reproducible, Infrastructure-as-Code platform for building, deploying, and maintaining a modern Arch Linux workstation.
+An engineering-first Infrastructure-as-Code platform for building, deploying, and maintaining a modern Arch Linux workstation.
 
-This project applies software engineering and infrastructure engineering principles to a personal Linux desktop by treating workstation configuration as code: version controlled, automated, validated, documented, and continuously improved.
+This project applies professional software and infrastructure engineering practices to a personal Linux desktop by treating workstation configuration as code: version controlled, automated, validated, documented, and continuously improved.
+
+The goal is to build a workstation that is reproducible, maintainable, and deployable using the same engineering discipline applied to production infrastructure.
 
 ---
 
@@ -60,7 +62,7 @@ The project emphasizes:
 
 ## Current Release
 
-**v3.0.0 — Governance Foundation**
+**v3.1.x — Repository Engineering**
 
 ### Completed
 
@@ -68,20 +70,23 @@ The project emphasizes:
 - Bootstrap orchestration
 - Manifest-driven package management
 - Configuration deployment
-- Repository validation
-- Workstation validation
-- Continuous Integration
+- Modular repository validation framework
+- Repository doctor framework
+- Shared script libraries
+- Repository configuration library
+- GitHub Actions Continuous Integration
+- ShellCheck integration
 - Engineering governance
 - Historical documentation
 - Release management framework
-- Versioning policy
+- Semantic Versioning
 
 ### Current Focus
 
 - Desktop completion
-- Expanded validation
-- Improved first-run experience
+- Workstation validation improvements
 - User experience improvements
+- Expanded automation
 
 ---
 
@@ -115,7 +120,7 @@ Project documentation is organized by purpose.
 |----------|---------|
 | `docs/roadmap/CHANGELOG.md` | Chronological release history |
 | `docs/roadmap/release_notes/` | Detailed release notes for each version |
-| `docs/history/VERSIONING.md` | Semantic versioning and release policy |
+| `docs/history/VERSIONING.md` | Semantic Versioning and release policy |
 | `docs/templates/RELEASE_NOTE_TEMPLATE.md` | Standard template for future releases |
 
 ---
@@ -151,11 +156,28 @@ Project documentation is organized by purpose.
           Reproducible Workstation
 ```
 
-The complete deployment process is orchestrated through:
+The workstation deployment process is orchestrated through:
 
 ```text
 scripts/bootstrap.sh
 ```
+
+Repository engineering and validation are provided through:
+
+```text
+scripts/doctor.sh
+```
+
+---
+
+# Repository Components
+
+| Component | Purpose |
+|-----------|---------|
+| `scripts/bootstrap.sh` | Deploys and configures the workstation |
+| `scripts/doctor.sh` | Coordinates repository validation and health checks |
+| `scripts/doctor.d/` | Modular repository validation checks |
+| `scripts/lib/` | Shared libraries used by repository tooling |
 
 ---
 
@@ -163,11 +185,25 @@ scripts/bootstrap.sh
 
 ```text
 arch-workstation/
-
-├── config/
-├── configs/
-├── packages/
+│
+├── config/                  # User configuration templates
+├── configs/                 # Managed configuration files
+├── packages/                # Package manifests
+│
 ├── scripts/
+│   ├── bootstrap.sh         # Primary deployment entry point
+│   ├── validate.sh          # Workstation validation
+│   ├── doctor.sh            # Repository health checks
+│   ├── doctor.d/            # Modular repository validation
+│   │   ├── documentation.sh
+│   │   ├── environment.sh
+│   │   ├── repository.sh
+│   │   └── validation.sh
+│   │
+│   └── lib/                 # Shared shell libraries
+│       ├── common.sh
+│       ├── doctor-common.sh
+│       └── repo-config.sh
 │
 ├── docs/
 │   ├── foundations/
@@ -187,6 +223,9 @@ arch-workstation/
 │   ├── templates/
 │   └── PROJECT_CONSTITUTION.md
 │
+├── .github/                 # CI workflows
+├── .editorconfig            # Repository formatting standards
+│
 └── README.md
 ```
 
@@ -194,39 +233,46 @@ arch-workstation/
 
 # Features
 
-Current capabilities include:
+## Deployment
 
 - Manifest-driven package installation
 - Automatic AUR installation
 - Bootstrap orchestration
 - Configuration deployment
-- Automatic configuration backup
 - Managed symbolic links
-- Repository validation
-- Workstation validation
-- Helper command installation
-- GitHub Actions CI
+- Automatic configuration backup
+
+## Engineering
+
+- Modular repository validation framework
+- Repository doctor
+- Automatic Bash syntax validation
 - ShellCheck integration
+- GitHub Actions Continuous Integration
+- Documentation-first workflow
+- Engineering governance
 
 ---
-
 # Validation
 
-Validation occurs in two stages.
+Repository validation is performed using the modular doctor framework.
 
-## Repository Validation
-
-Verifies repository integrity before deployment.
+Run:
 
 ```bash
-./scripts/repo-validate.sh
+./scripts/doctor.sh
 ```
 
----
+The doctor performs:
 
-## Workstation Validation
+- Documentation checks
+- Environment validation
+- Repository integrity checks
+- Bash syntax validation
+- ShellCheck analysis
+- Automatic repository script discovery
 
-Verifies that a deployed workstation matches the expected repository state.
+Workstation validation verifies that a deployed workstation matches the expected repository state.
 
 ```bash
 ./scripts/validate.sh
@@ -250,10 +296,16 @@ git clone git@github.com:coady-rangel/arch-workstation.git
 cd arch-workstation
 ```
 
-Run the bootstrap process.
+Deploy the workstation.
 
 ```bash
 ./scripts/bootstrap.sh
+```
+
+Validate the repository.
+
+```bash
+./scripts/doctor.sh
 ```
 
 Restart the graphical session when deployment completes.
@@ -323,7 +375,7 @@ The workstation is built around long-term engineering goals:
 
 Every push is automatically validated using GitHub Actions.
 
-Current validation includes:
+Current automated validation includes:
 
 - Bash syntax
 - ShellCheck
@@ -333,8 +385,7 @@ Recommended local verification:
 
 ```bash
 git diff --check
-bash -n scripts/*.sh scripts/lib/*.sh
-shellcheck -x -P SCRIPTDIR scripts/*.sh
+./scripts/doctor.sh
 ```
 
 ---
