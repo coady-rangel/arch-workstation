@@ -1,0 +1,95 @@
+name: Publish GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out tagged revision
+        uses: actions/checkout@v4
+
+      - name: Verify clean working tree
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "::error::Repository is not clean."
+            git status --short
+            exit 1
+          fi
+
+      - name: Resolve release metadata
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag="${GITHUB_REF_NAME}"
+          notes_file="docs/roadmap/release_notes/${tag}.md"
+
+          if [[ ! -f "$notes_file" ]]; then
+            echo "::error title=Missing release notes::Expected ${notes_file}"
+            exit 1
+          fi
+
+          title="$(head -n1 "$notes_file" | sed 's/^# //')"
+
+          if [[ -z "$title" ]]; then
+            echo "::error::Unable to determine release title."
+            exit 1
+          fi
+
+          {
+            echo "tag=$tag"
+            echo "notes_file=$notes_file"
+            echo "title=$title"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing release
+        id: existing
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish release
+        if: steps.existing.outputs.exists == 'false'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          TITLE: ${{ steps.release.outputs.title }}
+          NOTES_FILE: ${{ steps.release.outputs.notes_file }}
+        run: |
+          set -euo pipefail
+
+          gh release create "$TAG" \
+            --verify-tag \
+            --title "$TITLE" \
+            --notes-file "$NOTES_FILE"
+
+      - name: Report existing release
+        if: steps.existing.outputs.exists == 'true'
+        shell: bash
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          echo "GitHub Release ${TAG} already exists; no changes were made."

@@ -14,7 +14,10 @@ Detailed release documentation is available in the `release_notes/` directory.
 - Repository standards finalized
 - Documentation architecture reorganized
 
-**Release Notes:** [v3.0.0](release_notes/v3.0.0.md)
+**Release Notes:**
+
+- [v3.0.0](release_notes/v3.0.0.md)
+- [v3.1.0](Documentation and Release Framework](release_notes/v3.1.0.md)
 
 ---
 
@@ -26,7 +29,9 @@ Detailed release documentation is available in the `release_notes/` directory.
 - Infrastructure documentation standardized
 - Repository organization improved
 
-**Release Notes:** [v2.0.0](release_notes/v2.0.0.md)
+**Release Notes:**
+
+- [v2.0.0](release_notes/v2.0.0.md)
 
 ---
 
@@ -38,7 +43,9 @@ Detailed release documentation is available in the `release_notes/` directory.
 - Documentation corrections
 - Repository quality improvements
 
-**Release Notes:** [v1.1.1](release_notes/v1.1.1.md)
+**Release Notes:**
+
+- [v1.1.1](release_notes/v1.1.1.md)
 
 ---
 
@@ -49,7 +56,9 @@ Detailed release documentation is available in the `release_notes/` directory.
 - Repository structure standardized
 - Documentation conventions established
 
-**Release Notes:** [v1.1.0](release_notes/v1.1.0.md)
+**Release Notes:**
+
+- [v1.1.0](release_notes/v1.1.0.md)
 
 ---
 
@@ -60,7 +69,9 @@ Detailed release documentation is available in the `release_notes/` directory.
 - First complete workstation foundation
 - Initial reproducible deployment
 
-**Release Notes:** [v1.0.0](release_notes/v1.0.0.md)
+**Release Notes:**
+
+- [v1.0.0](release_notes/v1.0.0.md)
 
 ---
 
@@ -71,7 +82,9 @@ Detailed release documentation is available in the `release_notes/` directory.
 - First functional Hyprland desktop
 - Initial public workstation milestone
 
-**Release Notes:** [v0.0.9](release_notes/v0.0.9.md)
+**Release Notes:**
+
+- [v0.0.9](release_notes/v0.0.9.md)
 
 ---
 
