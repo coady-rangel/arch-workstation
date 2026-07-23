@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+###############################################################################
+# Repository Paths
+###############################################################################
+
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+COMMON_LIB="${REPO_ROOT}/toolkit.d/lib/common.sh"
+MODULE_DIR="${REPO_ROOT}/toolkit.d/modules"
+
+###############################################################################
+# Load Toolkit Library
+###############################################################################
+
+# shellcheck source=toolkit.d/lib/common.sh
+source "${COMMON_LIB}"
+
+###############################################################################
+# Load All Modules
+###############################################################################
+
+for module in "${MODULE_DIR}"/*.sh; do
+    # shellcheck disable=SC1090
+    source "${module}"
+done
+
+###############################################################################
+# Main Menu
+###############################################################################
+
+main() {
+
+    while true; do
+
+        print_header
+
+        for i in "${!TOOLKIT_MODULE_NAMES[@]}"; do
+            printf "%d) %s\n" \
+                "$((i + 1))" \
+                "${TOOLKIT_MODULE_NAMES[$i]}"
+        done
+
+        echo
+        echo "Q) Quit"
+        echo
+
+        read -rp "Select an option: " choice
+
+        case "${choice}" in
+
+            q|Q)
+                exit 0
+                ;;
+
+            *)
+                if [[ "${choice}" =~ ^[0-9]+$ ]]; then
+
+                    index=$((choice - 1))
+
+                    if (( index >= 0 && index < ${#TOOLKIT_MODULE_FUNCTIONS[@]} )); then
+
+                        "${TOOLKIT_MODULE_FUNCTIONS[$index]}"
+
+                    else
+
+                        echo
+                        echo "Invalid selection."
+                        pause
+
+                    fi
+
+                else
+
+                    echo
+                    echo "Invalid selection."
+                    pause
+
+                fi
+                ;;
+        esac
+
+    done
+}
+
+###############################################################################
+# Entry Point
+###############################################################################
+
+main
