@@ -282,7 +282,7 @@ engineering_menu() {
         echo "3) Repository Doctor"
         echo "4) Repository Validation"
         echo "5) Workstation Validation"
-        echo "6) Release Assistant"
+        echo "6) Release Management"
         echo
         echo "B) Back"
         echo
@@ -306,7 +306,7 @@ engineering_menu() {
                 run_script "${WORKSTATION_VALIDATE_SCRIPT}"
                 ;;
             6)
-                run_script "${RELEASE_SCRIPT}"
+                release_management_menu
                 ;;
             b|B)
                 return
