@@ -58,7 +58,15 @@ validate_config_links() {
             continue
         fi
 
-        resolved_target=$(readlink -f "$target")
+        #
+        # Gracefully handle broken symlinks instead of exiting because of
+        # 'set -e'.
+        #
+        if ! resolved_target=$(readlink -f "$target" 2>/dev/null); then
+            fail "$name points to an invalid or broken symlink"
+            continue
+        fi
+
         resolved_source=$(readlink -f "$source")
 
         if [[ $resolved_target != "$resolved_source" ]]; then
