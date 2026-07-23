@@ -25,3 +25,10 @@ __pycache__/
 
 # Logs
 *.log
+
+# Support bundle output
+support/output/
+
+# Temporary support artifacts
+support/**/*.tmp
+support/**/*.temp
