@@ -1,4 +1,4 @@
-.PHONY: readme validate doctor
+.PHONY: readme validate doctor release
 
 readme:
 	./scripts/build-readme.sh
@@ -8,3 +8,6 @@ validate:
 
 doctor:
 	./scripts/doctor.sh
+
+release:
+	./scripts/release.sh $(FLAGS) $(VERSION)
