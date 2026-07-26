@@ -37,9 +37,10 @@ p7zip
 rsync
 ncdu
 
-# Future Desktop Environment
+# Desktop Environment
 
 hyprland
+quickshell
 waybar
 foot
 neovim
