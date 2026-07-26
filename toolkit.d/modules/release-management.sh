@@ -323,8 +323,103 @@ list_github_releases() {
 }
 
 backfill_releases() {
+    clear
+
+    echo "========================================="
+    echo "     Backfill Missing Releases"
+    echo "========================================="
     echo
-    echo "Coming Soon"
+
+    local script="${REPO_ROOT}/scripts/backfill-github-releases.sh"
+    local tag
+    local confirm
+    local rc
+    local -a missing=()
+
+    if [[ ! -x "${script}" ]]; then
+        echo "Backfill script not found or not executable:"
+        echo "  ${script}"
+        echo
+        pause
+        return
+    fi
+
+    if ! gh auth status >/dev/null 2>&1; then
+        echo "GitHub authentication check failed."
+        echo "Run: gh auth status"
+        echo
+        pause
+        return
+    fi
+
+    echo "Scanning Git tags and GitHub releases..."
+    echo
+
+    while IFS= read -r tag; do
+        [[ -z "${tag}" ]] && continue
+
+        if ! gh release view "${tag}" >/dev/null 2>&1; then
+            missing+=("${tag}")
+        fi
+    done < <(git -C "${REPO_ROOT}" tag --sort=version:refname)
+
+    if (( ${#missing[@]} == 0 )); then
+        echo "No missing GitHub releases found."
+        echo
+        pause
+        return
+    fi
+
+    echo "Missing releases:"
+    echo
+
+    for tag in "${missing[@]}"; do
+        echo "  ${tag}"
+    done
+
+    echo
+    read -rp "Create ${#missing[@]} missing GitHub release(s)? [y/N]: " confirm
+
+    case "${confirm}" in
+        y|Y|yes|YES)
+            ;;
+        *)
+            echo
+            echo "Backfill cancelled."
+            echo
+            pause
+            return
+            ;;
+    esac
+
+    echo
+    echo "Running release backfill..."
+    echo
+
+    if (
+        cd "${REPO_ROOT}"
+        ./scripts/backfill-github-releases.sh
+    ); then
+        rc=0
+    else
+        rc=$?
+    fi
+
+    echo
+    echo "-----------------------------------------"
+    echo "Backfill Summary"
+    echo "-----------------------------------------"
+
+    if (( rc == 0 )); then
+        echo "Status    : PASSED"
+    else
+        echo "Status    : FAILED"
+    fi
+
+    echo "Exit Code : ${rc}"
+    echo "-----------------------------------------"
+    echo
+
     pause
 }
 
